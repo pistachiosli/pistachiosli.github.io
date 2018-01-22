@@ -15,7 +15,6 @@
 		canvas.style.transformOrigin = ''+pageheight/4/pagewidth*100+'% 50%';
 	}
 	window.onresize = function(){
-		window.cancelAnimationFrame(window.animation);
 		pageInit();
 		Game.init(1);
 	}
@@ -46,45 +45,67 @@
 		},{
 			name:'mario2',
 			src:'../img/mario2.png'
+		},{
+			name:'clickleft',
+			src:'../img/clickleft.png'
+		},{
+			name:'clickright',
+			src:'../img/clickright.png'
 		}
 	],function(){
 		Game.init(1);
 	});
-	var Game = {
-		runstate:1,//马里奥的状态
-		mapfoot:0,//地面高度
-		init:function(i){
-			var me = this;
-			me.getImgs();
-			me.mapfoot = canvas.height-32/770*canvas.width-me.mario1.height;
-			me.update();
-		},
-		getImgs:function(){
-			this.bgimg = ImageManger.getImg('bg');
+	//马里奥类
+	var Mario = {
+		runstate:1,//0:站立,1-16:行走
+		x:0,
+		y:0,
+		maxy:canvas.height-32/770*canvas.width-62,
+		width:32,
+		height:62,
+		init:function(){
+			this.y = this.maxy;
 			this.mario1 = ImageManger.getImg('mario1');
 			this.mario2 = ImageManger.getImg('mario2');
 		},
-		update:function(){
-			window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-			window.animation = requestAnimationFrame(Game.update);
-			Game.draw();
-		},
 		draw:function(){
 			var me = this;
-			ctx.clearRect(0,0,canvas.height,canvas.height);
-			ctx.drawImage(me.bgimg,0,canvas.height-me.bgimg.height*(canvas.width/me.bgimg.width),canvas.width,
-				me.bgimg.height*(canvas.width/me.bgimg.width));
 			if(me.runstate > 0&&me.runstate<=8){
-				ctx.drawImage(me.mario1,0,me.mapfoot)
+				ctx.drawImage(me.mario1,me.x,me.y,me.width,me.height);
 				me.runstate ++;
 			}
 			if(me.runstate>8&&me.runstate<=16){
-				ctx.drawImage(me.mario2,0,me.mapfoot)
+				ctx.drawImage(me.mario2,me.x,me.y,me.width,me.height);
 				me.runstate++;
 				if(me.runstate>16){
 					me.runstate = 1;
 				}
 			}
 		}
-	}
+	};
+	//游戏类
+	var Game = {
+		left:0,
+		init:function(i){
+			var me = this;
+			Mario.init();
+			this.bgimg = ImageManger.getImg('bg');
+			me.update();
+		},
+		update:function(){
+			window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+			window.cancelAnimationFrame(window.animation);
+			window.animation = requestAnimationFrame(Game.update);
+			Game.draw();
+		},
+		draw:function(){
+			var me = this;
+			//清除画布
+			ctx.clearRect(0,0,canvas.height,canvas.height);
+			//画背景图
+			ctx.drawImage(me.bgimg,me.left,canvas.height-me.bgimg.height*(canvas.width/me.bgimg.width),canvas.width,
+				me.bgimg.height*(canvas.width/me.bgimg.width));
+			Mario.draw();
+		}
+	};
 }())
