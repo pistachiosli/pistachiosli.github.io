@@ -1,0 +1,31 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+@media (orientation:portrait) {
+	.box{
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		box-sizing: border-box;
+		// overflow: hidden;
+		background-color: #6b88ff;
+	}
+	.canvas{
+		transform:rotate(90deg);
+	}
+}
+@media (orientation:landscape) {
+	.box{
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		box-sizing: border-box;
+		// overflow: hidden;
+		background-color: #6b88ff;
+	}
+}
