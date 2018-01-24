@@ -2,15 +2,33 @@
 	margin: 0;
 	padding: 0;
 }
-.to-left,.to-right{
+.to-left,
+.to-right,
+.to-top,
+.shot{
 	position: fixed;
-	width: 40px;
-	height: 40px;
+	width: 50px;
+	height: 50px;
 	line-height: 40px;
-	border: 1px solid #000;
 	border-radius: 50%;
 	text-align: center;
 	font-size: 26px;
+}
+.to-left{
+	background: url("../img/left.png");
+	background-size: contain;
+}
+.to-right{
+	background: url("../img/right.png");
+	background-size: contain;
+}
+.to-top{
+	background: url("../img/up.png");
+	background-size: contain;
+}
+.shot{
+	background: url("../img/shot.png");
+	background-size: contain;
 }
 @media (orientation:portrait) {
 	.box{
@@ -26,13 +44,23 @@
 	.to-left{
 		left: 100px;
 		top: 20px;
-		transform:rotate(90deg);
 	}
 	.to-right{
 		left: 100px;
 		top: 100px;
-		transform:rotate(90deg);
 	}
+	.to-top{
+		left: 60px;
+		bottom: 80px;
+	}
+	.shot{
+		left: 120px;
+		bottom: 40px;
+	}
+	.to-left,
+	.to-right,
+	.to-top,
+	.shot,
 	.canvas{
 		transform:rotate(90deg);
 	}
@@ -55,5 +83,13 @@
 	.to-right{
 		bottom: 100px;
 		left: 100px;
+	}
+	.to-top{
+		right: 80px;
+		bottom: 60px;
+	}
+	.shot{
+		right: 40px;
+		bottom: 120px;
 	}
 }
