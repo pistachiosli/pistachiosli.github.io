@@ -101,13 +101,14 @@
 			}
 		}
 	}
+	var map = new Map(canvas.width,(1-32/228)*canvas.height);//获取地图
 	//马里奥类
 	var Mario = {
 		runstate:0,//0:站立,11-26:向右走,31-46:向左走
 		x:0,//相对于画布的x
 		movex:0,//相对于屏幕的x
 		y:0,//相对于屏幕的y
-		maxy:canvas.height-32/770*canvas.width-36,
+		maxy:canvas.height*(1-32/228)-36,
 		width:18,
 		height:36,
 		speedx:0,
@@ -258,37 +259,8 @@
 		left:0,
 		movebg:false,
 		wallsize:25,
-		wall:[
-			{
-				type:2,//问号墙
-				x:280,
-				y:200
-			},{
-				type:1,//普通墙
-				x:375,
-				y:200
-			},{
-				type:2,
-				x:400,
-				y:200
-			},{
-				type:1,
-				x:425,
-				y:200
-			},{
-				type:2,
-				x:450,
-				y:200
-			},{
-				type:1,
-				x:475,
-				y:200
-			},{
-				type:2,
-				x:425,
-				y:120
-			}
-		],
+		wall:map.wall,
+		pipe:map.pipe,
 		init:function(i){
 			var me = this;
 			Mario.init();
@@ -305,18 +277,22 @@
 		},
 		draw:function(){
 			var me = this;
+			var i;
 			me.move();
 			//清除画布
 			ctx.clearRect(0,0,canvas.height,canvas.height);
 			//画背景图
 			ctx.drawImage(me.bgimg,me.left,0,me.bgimg.width*(canvas.height/me.bgimg.height),canvas.height);
-			for(var i = 0;i<me.wall.length;i++){
+			//画墙
+			for(i = 0;i<me.wall.length;i++){
 				if(me.wall[i].type === 1){
 					ctx.drawImage(me.wall1,me.left+me.wall[i].x,me.wall[i].y,me.wallsize,me.wallsize);
 				}else if(me.wall[i].type === 2){
 					ctx.drawImage(me.wall2,me.left+me.wall[i].x,me.wall[i].y,me.wallsize,me.wallsize);
 				}
 			}
+			//画水管
+			
 			Mario.draw();
 		},
 		//背景移动
@@ -332,11 +308,11 @@
 		boom:function(){
 			var me = this;
 			for(var i = 0;i<me.wall.length;i++){
-				if(Mario.boomstate){
+				if(Mario.boomstate){//之前在墙上
 					var changeboomstate = true;
 					if(Mario.boompoint[3].x>me.wall[i].x&&Mario.boompoint[3].x<me.wall[i].x+me.wallsize
 					&&Mario.boompoint[3].y+10>me.wall[i].y&&Mario.boompoint[3].y+10<me.wall[i].y+me.wallsize){
-						changeboomstate = false;
+						changeboomstate = false;//现在在墙上
 						break;
 					}
 				}else{
@@ -357,7 +333,7 @@
 					}
 				}
 			}
-			if(changeboomstate){
+			if(changeboomstate){//现在没在墙上
 				Mario.boomstate = false;
 				Mario.ay = -0.21;
 			}
