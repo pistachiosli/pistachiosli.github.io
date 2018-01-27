@@ -23,25 +23,25 @@
 	ImageManger.addImg([
 		{
 			name:'bg',
-			src:'/mario/img/bg.png'
+			src:'../img/bg.png'
 		},{
 			name:'mario1',
-			src:'/mario/img/mario1.png'
+			src:'../img/mario1.png'
 		},{
 			name:'mario2',
-			src:'/mario/img/mario2.png'
+			src:'../img/mario2.png'
 		},{
 			name:'mario3',
-			src:'/mario/img/mario3.png'
+			src:'../img/mario3.png'
 		},{
 			name:'mario4',
-			src:'/mario/img/mario4.png'
+			src:'../img/mario4.png'
 		},{
 			name:'wall1',
-			src:'/mario/img/wall1.png'
+			src:'../img/wall1.png'
 		},{
 			name:'wall2',
-			src:'/mario/img/wall2.png'
+			src:'../img/wall2.png'
 		}
 	],function(){
 		Game.init(1);
