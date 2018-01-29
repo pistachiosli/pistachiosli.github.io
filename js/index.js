@@ -10,9 +10,9 @@
 			pageheight = window.innerHeight;
 			pagewidth = window.innerWidth;
 		}
-		canvas.width = pagewidth*2;
+		canvas.width = pagewidth;
 		canvas.height = pageheight;
-		canvas.style.transformOrigin = ''+pageheight/4/pagewidth*100+'% 50%';
+		canvas.style.transformOrigin = ''+pageheight/2/pagewidth*100+'% 50%';
 	}
 	//屏幕尺寸发生变化
 	window.onresize = function(){
@@ -104,11 +104,14 @@
 	var map = new Map(canvas.width,(1-32/228)*canvas.height);//获取地图
 	//马里奥类
 	var Mario = {
+		name:'mario',
+		cpoint:[],//中点
+		cdistance:9,//安全距离
 		runstate:0,//0:站立,11-26:向右走,31-46:向左走
 		x:0,//相对于画布的x
 		movex:0,//相对于屏幕的x
 		y:0,//相对于屏幕的y
-		maxy:canvas.height*(1-32/228)-36,
+		maxy:canvas.height*(1-32/228)-36,//地面高度
 		width:18,
 		height:36,
 		speedx:0,
@@ -116,8 +119,7 @@
 		ay:0,
 		jumpstate:0,//1:一级跳,2:二级跳
 		movestate:[false,false,false],//左,右,上移动状态
-		boompoint:[],//马里奥4个点,为了检测碰撞
-		boomstate:false,//是否产生了碰撞
+		onwall:false,//是否在墙上
 		init:function(){
 			this.y = this.maxy;
 			this.mario1 = ImageManger.getImg('mario1');
@@ -157,15 +159,15 @@
 			var me = this;
 			me.movex += me.speedx;
 			if(me.movestate[1]){//向右跑
-				if(me.movex<canvas.width/4){//没到中间
+				if(me.movex<canvas.width/2){//没到中间
 					me.x = me.movex;
 				}else{//到中间
 					Game.movebg = true;
 				}
 			}else if(me.movestate[0]){//向左跑
 				if(Game.movebg){//到过中间
-					if(me.movex<canvas.width/4){
-						me.movex = canvas.width/4;
+					if(me.movex<canvas.width/2){
+						me.movex = canvas.width/2;
 					}
 				}else{//没到过中间
 					if(me.movex>0){
@@ -175,29 +177,25 @@
 					}
 				}
 			}
-			me.speedy += me.ay;
-			me.y -= me.speedy;
+			if(!me.onwall){//在墙上就没有加速度
+				me.speedy += me.ay;
+				me.y -= me.speedy;
+			}else if(me.speedy>0){
+				me.speedy += me.ay;
+				me.y -= me.speedy;
+			}
 			if(me.y>me.maxy){//无法下降
 				me.y = me.maxy;
 				me.a = 0;
 				me.jumpstate = 0;
 			}
-			me.boompoint[0] = {//左上角点
-				x:me.movex,
-				y:me.y
-			};
-			me.boompoint[1] = {//右上角点
-				x:me.movex+me.width,
-				y:me.y
-			};
-			me.boompoint[2] = {//左下角点
-				x:me.movex,
-				y:me.y+me.height
-			};
-			me.boompoint[3] = {//右下角点
-				x:me.movex+me.width,
-				y:me.y+me.height
-			};
+			me.cpoint = [{
+				x:me.movex+9,
+				y:me.y+9
+			},{
+				x:me.movex+9,
+				y:me.y+27
+			}];
 		},
 		//马里奥状态改变
 		changeMove:function(where){
@@ -218,9 +216,10 @@
 				me.movestate[2] = true;
 				me.jumpstate++;
 				if(me.jumpstate <= 2){
-					me.speedy = 5.5;//初速度
+					me.speedy = 4.5;//初速度
 					me.ay = -0.21;//离心加速度
 				}
+				me.onwall = false;
 			}
 		},
 		//松开按键
@@ -237,28 +236,27 @@
 			}
 		},
 		//马里奥与墙碰撞之后的重置函数
-		reset:function(state){
+		reset:function(){
 			var me = this;
-			if(state === 'return'){
-				me.movex -= me.speedx;
-				me.y += me.speedy;
-				me.speedx = 0;
-				me.speedy = 0;
-				me.movestate = [false,false,false];
-			}else{
-				console.log('111')
-				me.y += me.speedy;
-				me.speedy = 0;
-				me.jumpstate = 0;
-				me.ay = 0;
-			}
+			me.movex -= me.speedx;
+			me.y += me.speedy;
+			me.speedx = 0;
+			me.speedy = 0;
+			me.jumpstate = 0;
+			me.cpoint = [{
+				x:me.movex+9,
+				y:me.y+9
+			},{
+				x:me.movex+9,
+				y:me.y+27
+			}];
 		}
 	};
 	//游戏类
 	var Game = {
-		left:0,
-		movebg:false,
-		wallsize:25,
+		left:0,//屏幕最左边和背景图最左边的差值
+		movebg:false,//是否需要移动背景图
+		wallsize:25,//墙的大小
 		wall:map.wall,
 		pipe:map.pipe,
 		init:function(i){
@@ -278,7 +276,6 @@
 		draw:function(){
 			var me = this;
 			var i;
-			me.move();
 			//清除画布
 			ctx.clearRect(0,0,canvas.height,canvas.height);
 			//画背景图
@@ -293,6 +290,7 @@
 			}
 			//画水管
 			
+			me.move();
 			Mario.draw();
 		},
 		//背景移动
@@ -300,43 +298,71 @@
 			var me = this;
 			//马里奥右跑到屏幕中间后背景向左滑动
 			if(me.movebg){
-				me.left = canvas.width/4-Mario.movex;
+				me.left = canvas.width/2-Mario.movex;
 			}
-			me.boom();
+			me.boomWall();
 		},
-		//碰撞检测
-		boom:function(){
+		//判断是否撞墙
+		boomWall:function(){
 			var me = this;
+			var leavewall = true;//检测每次碰撞后是否离开墙上面
 			for(var i = 0;i<me.wall.length;i++){
-				if(Mario.boomstate){//之前在墙上
-					var changeboomstate = true;
-					if(Mario.boompoint[3].x>me.wall[i].x&&Mario.boompoint[3].x<me.wall[i].x+me.wallsize
-					&&Mario.boompoint[3].y+10>me.wall[i].y&&Mario.boompoint[3].y+10<me.wall[i].y+me.wallsize){
-						changeboomstate = false;//现在在墙上
+				if(me.wall[i].x>Mario.movex-50&&me.wall[i].x<Mario.movex+50){
+					var boom  = me.isBoom(me.wall[i],Mario);
+					if(boom.state === 1){
+						Mario.reset();
+						if(me.wall[i].cpoint[boom.ci].x-Mario.cpoint[boom.cj].x>=me.wall[i].cdistance+Mario.cdistance){
+							Mario.movex = me.wall[i].cpoint[boom.ci].x-me.wall[i].cdistance-Mario.width;
+						}else if(Mario.cpoint[boom.cj].x-me.wall[i].cpoint[boom.ci].x>=me.wall[i].cdistance+Mario.cdistance){
+							Mario.movex = me.wall[i].cpoint[boom.ci].x+me.wall[i].cdistance;
+						}else if(me.wall[i].cpoint[boom.ci].y-Mario.cpoint[boom.cj].y>=me.wall[i].cdistance+Mario.cdistance){
+							Mario.y = me.wall[i].cpoint[boom.ci].y-me.wall[i].cdistance-Mario.height;
+							leavewall = false;
+						}else if(Mario.cpoint[boom.cj].y-me.wall[i].cpoint[boom.ci].y>=me.wall[i].cdistance+Mario.cdistance){
+							Mario.y = me.wall[i].cpoint[boom.ci].y+me.wall[i].cdistance;
+						}
 						break;
 					}
-				}else{
-					for(var j = 0;j<Mario.boompoint.length;j++){
-						if(Mario.boompoint[j].x>me.wall[i].x&&Mario.boompoint[j].x<me.wall[i].x+me.wallsize
-						&&Mario.boompoint[j].y>me.wall[i].y&&Mario.boompoint[j].y<me.wall[i].y+me.wallsize){
-							if(Mario.boompoint[0].y + Mario.speedy<me.wall[i].y&&
-								Mario.boompoint[1].y + Mario.speedy<me.wall[i].y&&
-								Mario.boompoint[2].y + Mario.speedy<me.wall[i].y&&
-								Mario.boompoint[3].y + Mario.speedy<me.wall[i].y){
-								Mario.boomstate = true;
-								Mario.reset('onwall');
-							}else{
-								Mario.reset('return');
-							}
-							break;
+					if(boom.state === 2){
+						leavewall = false;
+					}
+				}
+			}
+			if(leavewall){
+				Mario.onwall = false;
+			}else{
+				Mario.onwall = true;
+				if(Mario.movestate[0]){//在墙上就恢复他的速度
+					Mario.speedx = -2;
+				}else if(Mario.movestate[1]){
+					Mario.speedx = 2;
+				}
+			}
+		},
+		//碰撞检测,给图片设置1个或者两个中心点,然后以中心点的距离来判断
+		isBoom:function(a,b){
+			for(var i = 0;i<a.cpoint.length;i++){
+				for(var j = 0;j<b.cpoint.length;j++){
+					if(Math.abs(a.cpoint[i].x-b.cpoint[j].x)<a.cdistance+b.cdistance
+					&&Math.abs(a.cpoint[i].y-b.cpoint[j].y)<a.cdistance+b.cdistance){
+						return {
+							state:1,
+							ci:i,
+							cj:j
+						};
+					}else if(a.cpoint[i].y-b.cpoint[j].y==a.cdistance+b.cdistance
+							&&Math.abs(a.cpoint[i].x-b.cpoint[j].x)<a.cdistance+b.cdistance){
+						return {
+							state:2
 						}
 					}
 				}
 			}
-			if(changeboomstate){//现在没在墙上
-				Mario.boomstate = false;
-				Mario.ay = -0.21;
-			}
+			return {
+				state:3,
+				ci:0,
+				cj:0
+			};
 		}
 	};
 	window.Mario = Mario;
