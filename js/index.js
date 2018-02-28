@@ -442,9 +442,9 @@
 								me.mapitems[i].type = 3;
 							}
 							if(me.mapitems[i-1]){
-								if(me.mapitems[i-1].name === 'gold'){//弹出金币
+								if(me.mapitems[i-1].name === 'gold'&&me.mapitems[i-1].cdistance === 0){//弹出金币
 									me.mapitems[i-1].y = me.mapitems[i-1].y-18;//变y
-									// me.mapitems[i-1].cdistance = 8;//加安全距离
+									me.mapitems[i-1].cdistance = 5;//加安全距离
 									me.mapitems[i-1].cpoint = [{x:me.mapitems[i-1].x+8,y:me.mapitems[i-1].y+8}];//加中心点
 								}
 							}
