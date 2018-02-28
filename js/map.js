@@ -3,84 +3,139 @@
 	 * 地图初始化
 	 * @param {[type]} width  地图总宽
 	 * @param {[type]} bottom 地面的高度
+	 * //wall:1:普通墙,2:问号墙,3:隐形墙
+	 * //pipe:1:最短的水管,2:中等长度水管,3:最长的水管
+	 * //master:1:普通怪,2:乌龟
 	 */
 	var Map = function(width,bottom){
-		this.wall = [//1:普通墙,2:问号墙,3:隐形墙
+		this.items = [
 			{
+				name:'wall',
+				type:1,
+				x:255,
+				y:bottom-100,
+				cpoint:[{x:267.5,y:bottom-87.5}],
+				cdistance:12.5
+			},
+			{
+				name:'gold',
+				type:1,
+				x:284.5,
+				y:bottom-98,
+				cpoint:[{x:0,y:0}],
+				cdistance:0
+			},{
+				name:'wall',
 				type:2,
 				x:280,
-				y:200,
-				cpoint:[{x:292.5,y:212.5}],
+				y:bottom-100,
+				cpoint:[{x:292.5,y:bottom-87.5}],
 				cdistance:12.5
 			},{
+				name:'wall',
 				type:1,
 				x:375,
-				y:200,
-				cpoint:[{x:387.5,y:212.5}],
+				y:bottom-100,
+				cpoint:[{x:387.5,y:bottom-87.5}],
 				cdistance:12.5
 			},{
+				name:'gold',
+				type:1,
+				x:404.5,
+				y:bottom-98,
+				cpoint:[{x:0,y:0}],
+				cdistance:0
+			},{
+				name:'wall',
 				type:2,
 				x:400,
-				y:200,
-				cpoint:[{x:412.5,y:212.5}],
+				y:bottom-100,
+				cpoint:[{x:412.5,y:bottom-87.5}],
 				cdistance:12.5
 			},{
-				name:'hhh',
+				name:'wall',
 				type:1,
 				x:425,
-				y:200,
-				cpoint:[{x:437.5,y:212.5}],
+				y:bottom-100,
+				cpoint:[{x:437.5,y:bottom-87.5}],
 				cdistance:12.5
 			},{
+				name:'gold',
+				type:1,
+				x:454.5,
+				y:bottom-100,
+				cpoint:[{x:0,y:0}],
+				cdistance:0
+			},{
+				name:'wall',
 				type:2,
 				x:450,
-				y:200,
-				cpoint:[{x:462.5,y:212.5}],
+				y:bottom-100,
+				cpoint:[{x:462.5,y:bottom-87.5}],
 				cdistance:12.5
 			},{
+				name:'wall',
 				type:1,
 				x:475,
-				y:200,
-				cpoint:[{x:487.5,y:212.5}],
+				y:bottom-100,
+				cpoint:[{x:487.5,y:bottom-87.5}],
 				cdistance:12.5
 			},{
+				name:'gold',
+				type:2,
+				x:429.5,
+				y:bottom-180,
+				cpoint:[{x:0,y:0}],
+				cdistance:0
+			},{
+				name:'wall',
 				type:2,
 				x:425,
-				y:120,
-				cpoint:[{x:437,y:132.5}],
+				y:bottom-180,
+				cpoint:[{x:437,y:bottom-167.5}],
 				cdistance:12.5
-			}
-		];
-		this.pipe = [//1:最短的水管,2:中等长度水管,3:最长的水管
-			{
+			},{
+				name:'pipe',
 				type:1,
-				x:500,
+				x:700,
 				y:bottom,
-				cpoint:[],
-				cdistance:0
+				cpoint:[{x:716,y:bottom-16}],
+				cdistance:16
 			},{
+				name:'pipe',
 				type:2,
-				x:675,
-				y:bottom,
-				cpoint:[],
-				cdistance:0
-			},{
-				type:3,
-				x:800,
-				y:bottom,
-				cpoint:[],
-				cdistance:0
-			},{
-				type:3,
 				x:925,
 				y:bottom,
-				cpoint:[],
-				cdistance:0
-			}
-		];
-		this.master = [//1:普通怪,2:乌龟
-			{
-
+				cpoint:[{x:941,y:bottom-32},{x:941,y:bottom-16}],
+				cdistance:16
+			},{
+				name:'pipe',
+				type:3,
+				x:1100,
+				y:bottom,
+				cpoint:[{x:1116,y:bottom-48},{x:1116,y:bottom-16}],
+				cdistance:16
+			},{
+				name:'pipe',
+				type:3,
+				x:1475,
+				y:bottom,
+				cpoint:[{x:1491,y:bottom-48},{x:1491,y:bottom-16}],
+				cdistance:16
+			},{
+				name:'master',
+				type:1,
+				x:200,
+				y:bottom,
+				cpoint:[{x:208,y:bottom-8}],
+				cdistance:8
+			},{
+				name:'master',
+				type:1,
+				x:400,
+				y:bottom-16,
+				cpoint:[{x:408,y:bottom-8}],
+				cdistance:8
 			}
 		];
 	};
