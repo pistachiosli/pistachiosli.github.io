@@ -1,4 +1,4 @@
-(function(){
+;(function(){
 	/**
 	 * 地图初始化
 	 * @param {[type]} width  地图总宽
@@ -126,14 +126,14 @@
 				name:'master',
 				type:1,
 				x:200,
-				y:bottom,
+				y:bottom-20,
 				cpoint:[{x:208,y:bottom-8}],
 				cdistance:8
 			},{
 				name:'master',
 				type:1,
 				x:400,
-				y:bottom-16,
+				y:bottom-20,
 				cpoint:[{x:408,y:bottom-8}],
 				cdistance:8
 			}
