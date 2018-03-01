@@ -37,6 +37,9 @@ ImageManger.addImg([{
 	name: 'mario4',
 	src: 'img/mario4.png'
 }, {
+	name: 'mariogg',
+	src: 'img/mariogg.png'
+}, {
 	name: 'wall1',
 	src: 'img/wall1.png'
 }, {

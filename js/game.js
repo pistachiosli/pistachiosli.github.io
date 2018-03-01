@@ -6,11 +6,9 @@
 		goldtime:0,//金币旋转的时间
 		mapitems:map.items,//地图里面的每一个小块
 		grade:0,//金币得分
-		life:3,//生命
 		masters:[],
 		init:function(i){
 			var me = this;
-			console.log(window.Mario);
 			Mario.init();
 			this.bgimg = ImageManger.getImg('bg');
 			this.wall1 = ImageManger.getImg('wall1');
@@ -72,9 +70,10 @@
 							ctx.drawImage(me.gold4,LEFT+me.mapitems[i].x,me.mapitems[i].y,me.goldsize,me.goldsize);
 						}
 					}else if(me.mapitems[i].name === 'master'){
-						var mas = new Master;
+						var mas = new Master();
 						mas.x = me.mapitems[i].x;
 						mas.y = me.mapitems[i].y;
+						mas.cdistance = me.mapitems[i].cdistance;
 						switch(me.mapitems[i].type){
 							case 1:mas.src1 = ImageManger.getImg('master11');
 									mas.src2 = ImageManger.getImg('master12');
@@ -98,7 +97,7 @@
 			ctx.fillStyle=gradient;
 			ctx.fillText('Supper Mario',180,30);
 			//画马里奥生命值
-			for(i = 0;i<me.life;i++){
+			for(i = 0;i<Mario.life;i++){
 				ctx.drawImage(me.lifeimg,20+i*20,30,20,20);
 			}
 			//画得分
@@ -121,11 +120,28 @@
 			}
 			me.boomWall();
 		},
-		//判断是否发生碰撞
+		//判断马里奥是否发生碰撞
 		boomWall:function(){
 			var me = this;
 			var leavewall = true;//检测每次碰撞后是否离开墙上面
-			for(var i = 0;i<me.mapitems.length;i++){
+			var i;
+			for(i = 0;i<me.masters.length;i++){
+				if(me.masters[i].x>Mario.movex-50&&me.masters[i].x<Mario.movex+50){
+					var boom  = me.isBoom(me.masters[i],Mario);
+					if(boom.state === 1){
+						Mario.reset();
+						//马里奥踩怪物
+						if(me.masters[i].cpoint[boom.ci].y-Mario.cpoint[boom.cj].y>=me.masters[i].cdistance+Mario.cdistance){
+							me.grade++;
+						}else{
+							Mario.gg();//哦豁
+						}
+						me.masters.splice(i,1);
+						return;
+					}
+				}
+			}
+			for(i = 0;i<me.mapitems.length;i++){
 				if(me.mapitems[i].x>Mario.movex-50&&me.mapitems[i].x<Mario.movex+50){
 					var boom  = me.isBoom(me.mapitems[i],Mario);
 					if(boom.state === 1){
@@ -185,23 +201,27 @@
 					if(Math.abs(a.cpoint[i].x-b.cpoint[j].x)<a.cdistance+b.cdistance
 					&&Math.abs(a.cpoint[i].y-b.cpoint[j].y)<a.cdistance+b.cdistance){
 						return {
-							state:1,
+							state:1,//碰撞进去
 							ci:i,
 							cj:j
 						};
 					}else if(a.cpoint[i].y-b.cpoint[j].y==a.cdistance+b.cdistance
 							&&Math.abs(a.cpoint[i].x-b.cpoint[j].x)<a.cdistance+b.cdistance){
 						return {
-							state:2
+							state:2//刚好碰撞
 						}
 					}
 				}
 			}
 			return {
-				state:3,
+				state:3,//没有碰撞
 				ci:0,
 				cj:0
 			};
+		},
+		//判断怪物与其他发生碰撞
+		masterBoomWall:function(){
+
 		}
 	};
 	window.Game = Game;

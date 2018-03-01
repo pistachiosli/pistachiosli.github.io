@@ -1,8 +1,6 @@
 ;(function() {
-	var Master = function(x, y, type, speedx) {
+	var Master = function() {
 		var me = this;
-		me.x = x; //初始x
-		me.y = y; //初始y
 		me.speedx = 0.2; //x轴速度
 		me.runstate = 0;
 	};
@@ -10,6 +8,10 @@
 		var me = this;
 		me.runstate++;
 		me.x += me.speedx;
+		me.cpoint = [{
+			x:me.x+me.cdistance,
+			y:me.y
+		}]
 		if (me.runstate < 16) {
 			ctx.drawImage(me.src1, me.x+LEFT, me.y, 20, 20);
 		} else {
