@@ -18,8 +18,25 @@ function addVideo(num, container, poster, video) {
 	videos[num] = document.querySelector(container);
 	videos[num].poster = poster;
 	videos[num].src=video;
-	videos[num].addEventListener('click',function(){
-		alert('111')
+	// videos[num].addEventListener('click',function(){
+	// 	alert('222')
+	// 	var me = this;
+	// 	if(me.paused){
+	// 		me.play();
+	// 		me.last_time = 0;
+	// 		alert('111')
+	// 		videos[num].timer = setInterval(function(){
+	// 			if(me.currentTime-me.last_time>1){
+	// 				me.currentTime = me.last_time;
+	// 			}
+	// 			me.last_time = me.currentTime;
+	// 		},500)
+	// 	}else{
+	// 		me.pause();
+	// 	}
+	// });
+	videos[num].addEventListener('touchstart',function(){
+		alert('222')
 		var me = this;
 		if(me.paused){
 			me.play();
