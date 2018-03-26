@@ -13,45 +13,44 @@ var videos = new Array(50);
 function endedHandler() {
 	alert('可以投票了')
 }
-
 function addVideo(num, container, poster, video) {
 	videos[num] = document.querySelector(container);
 	videos[num].poster = poster;
 	videos[num].src=video;
-	// videos[num].addEventListener('click',function(){
-	// 	alert('222')
-	// 	var me = this;
-	// 	if(me.paused){
-	// 		me.play();
-	// 		me.last_time = 0;
-	// 		alert('111')
-	// 		videos[num].timer = setInterval(function(){
-	// 			if(me.currentTime-me.last_time>1){
-	// 				me.currentTime = me.last_time;
-	// 			}
-	// 			me.last_time = me.currentTime;
-	// 		},500)
-	// 	}else{
-	// 		me.pause();
-	// 	}
-	// });
-	videos[num].addEventListener('touchstart',function(){
-		alert('222')
-		var me = this;
-		if(me.paused){
-			me.play();
-			me.last_time = 0;
-			alert('111')
-			videos[num].timer = setInterval(function(){
-				if(me.currentTime-me.last_time>1){
-					me.currentTime = me.last_time;
-				}
-				me.last_time = me.currentTime;
-			},500)
-		}else{
-			me.pause();
-		}
-	});
+	if ('ontouchstart' in window) {
+		var me = videos[num];
+		videos[num].addEventListener('touchstart',function(){
+			if(me.paused){
+				me.play();
+				me.last_time = 0;
+				videos[num].timer = setInterval(function(){
+					if(me.currentTime-me.last_time>1){
+						me.currentTime = me.last_time;
+					}
+					me.last_time = me.currentTime;
+				},500)
+			}else{
+				me.pause();
+			}
+		});
+	}else{
+		console.log('22222222222')
+		videos[num].addEventListener('click',function(){
+			var me = this;
+			if(me.paused){
+				me.play();
+				me.last_time = 0;
+				videos[num].timer = setInterval(function(){
+					if(me.currentTime-me.last_time>1){
+						me.currentTime = me.last_time;
+					}
+					me.last_time = me.currentTime;
+				},500)
+			}else{
+				me.pause();
+			}
+		});
+	}
 	videos[num].addEventListener('ended',function(){
 		endedHandler();
 	});
