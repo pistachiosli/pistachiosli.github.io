@@ -5,6 +5,11 @@
 body{
 	background-color: #000;
 }
+@media screen and (max-width: 660px) {
+    body {
+        background-color:lightblue;
+    }
+}
 .header{
 	text-align: center;
 	box-sizing: border-box;
@@ -32,27 +37,24 @@ body{
 	color: #725c22;
 	padding-left: 2%;
 	padding-top: 10px;
+	text-align: center;
 }
 .content .title{
 	height: 30px;
 	line-height: 30px;
 	font-size: 1rem;
 }
-.content .title .hr{
-	position: relative;
-	z-index: 999;
-	display: inline-block;
-	width: 100px solid #fff;
-	height: 2px;
-	width: 80%;
+.content .title .tip{
+	font-size: .9rem;
+	color: #0000bb;
 }
 .content .video{
 	display: inline-block;
-	width: 24%;
 	font-size: 14px;
 	cursor: pointer;
 	margin-bottom: 20px;
-	min-width: 275px;
+	width: 250px;
+	margin-right: 20px;
 }
 .video video{
 	width: 100%;
