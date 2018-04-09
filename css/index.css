@@ -1,0 +1,95 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+.to-left,
+.to-right,
+.to-top,
+.shot{
+	position: fixed;
+	width: 50px;
+	height: 50px;
+	line-height: 40px;
+	border-radius: 50%;
+	text-align: center;
+	font-size: 26px;
+}
+.to-left{
+	background: url("../img/left.png");
+	background-size: contain;
+}
+.to-right{
+	background: url("../img/right.png");
+	background-size: contain;
+}
+.to-top{
+	background: url("../img/up.png");
+	background-size: contain;
+}
+.shot{
+	background: url("../img/shot.png");
+	background-size: contain;
+}
+@media (orientation:portrait) {
+	.box{
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		box-sizing: border-box;
+		// overflow: hidden;
+		background-color: #6b88ff;
+	}
+	.to-left{
+		left: 100px;
+		top: 20px;
+	}
+	.to-right{
+		left: 100px;
+		top: 100px;
+	}
+	.to-top{
+		left: 60px;
+		bottom: 80px;
+	}
+	.shot{
+		left: 120px;
+		bottom: 40px;
+	}
+	.to-left,
+	.to-right,
+	.to-top,
+	.shot,
+	.canvas{
+		transform:rotate(90deg);
+	}
+}
+@media (orientation:landscape) {
+	.box{
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		box-sizing: border-box;
+		// overflow: hidden;
+		background-color: #6b88ff;
+	}
+	.to-left{
+		bottom: 100px;
+		left: 20px;
+	}
+	.to-right{
+		bottom: 100px;
+		left: 100px;
+	}
+	.to-top{
+		right: 80px;
+		bottom: 60px;
+	}
+	.shot{
+		right: 40px;
+		bottom: 120px;
+	}
+}
